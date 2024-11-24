@@ -1,0 +1,470 @@
+Lv7 -> lv8 : 
+ls -la 
+See all files in the directory  -> find the data.txt find 
+grep -C 2 "millionth" data.txt -> Find the keyword "millionth" and 2 lines before and after the line keyword appears.
+psd:TESKZC0XvTetK0S9xNwm25STk5iWrBvP 
+
+
+---------------------------------------------------------------------------
+lv8 -> lv9: 
+sort data.txt | uniq -u
+sample of sort and uniq command: 
+$ cat sorted.txt
+bash 
+foss 
+hack 
+hack
+
+$ uniq sorted.txt
+bash 
+foss 
+hack 
+
+Alternatively, use this:
+
+$ sort unsorted.txt | uniq
+Display only unique lines (the lines that are not repeated or duplicated in the input file):
+
+$ uniq -u sorted.txt
+bash
+foss
+
+
+psd:EN632PlfYiZbn3PhVK3XOGSlNInNE00t
+
+
+---------------------------------------------------------------------------
+lv9 -> lv10: 
+strings -n 10 yourfile.txt | grep -E "^=+[[:print:]]+$"
+
+Here's what the command does: 
+strings -n 10 yourfile.txt: The strings command extracts human-readable strings from a binary file (yourfile.txt in this case). The -n 10 option specifies the minimum string length (in characters) to consider. Adjust this value as needed.
+
+|: This is a pipe, which takes the output of the strings command and sends it as input to the next command.
+
+grep -E "^=+[[:print:]]+$": The grep command is used to search for lines that match a specific pattern. In this case, it looks for lines that start with one or more '=' characters followed by one or more printable characters. Here's what the pattern does:
+
+^: Anchors the pattern to the beginning of a line.
+=+: Matches one or more '=' characters.
+[[:print:]]+: Matches one or more printable characters (including letters, numbers, symbols, and spaces).
+$: Anchors the pattern to the end of a line.
+
+psd:G7w8LIi6J3kTb8A7j9LgrywtEUlyyp6s
+
+
+---------------------------------------------------------------------------
+lv10 -> lv11 
+
+base64 -d [filename]
+base64 is the command used to encode [-e flag] or decode [-d flag] data 
+psd = 6zPeziLdR2RKNdNYFNb6nVCKzphlXHBM
+
+
+---------------------------------------------------------------------------
+lv11 -> lv12 
+
+cat data.txt | tr '[a-z]' '[n-za-m]' | tr '[A-Z]' '[N-ZA-M]'
+
+Original:  a b c d e f g h i j k l m n o p q r s t u v w x y z
+ROT13:     n o p q r s t u v w x y z a b c d e f g h i j k l m
+
+n to z is end so it has to continue with a to m, that's why [n-za-m] 
+
+psd = JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
+----------------------------------------------------------------------------
+lv12 -> lv13  
+
+The command line xxd can be used. xxd <input_file> <output_file> creates hexdumps. When using the -r flag, it reverts the hexdump. 
+=> This command print out hexdump of a input text/file 
+
+Compression is a method of encoding that aims to reduce the original size of a file without losing information (or only losing as little as possible).
+    
+    -[gzip] is a command to compress or decompress (-d) files. A ‘gzip’ file generally ends with .gz.
+    
+    -[bzip2] is another command which allows for compressing and decompressing (-d) files. A ‘bzip2’ file generally ends with .bz2.
+
+An Archive File is a file that contains one or multiple files and their metadata. This can allow easier portability.
+
+-   -[tar] is a command that creates archive files (-cf). It also allows extracting these files again (-xf). A tar archive generally ends with .tar.
+
+Walkthrough: 
+
+- First create a temp dir (personally i don't think this is mandatory) [mkdir /tmp/[name]]
+- Move to that dir cd [path/to/name]
+- Copy data file to temp dir cp [path/to/file] [destination]
+#Note: we will need to change prefix of the file many times to be able to guess the right format of the file. .txt .tar .gz .bz2 (We can know which format of file base on first 4 digits in 2nd column of hexdump file)
+
+- After chaning data file name, we need to see which compress format of hexdump file by [cat [data_file] | head] with [head] to see first 10 lines of hexdump file 
+
+eg: 00000000: 1f8b 0808 2773 4564 0203 6461 7461 322e  ....'sEd..data2. 
+=> first 4 digits in 2nd column of hexdump file is 1f8b => .gz file => change prefix to .gz and depressed it with [gzip -d [filename]]
+
+-After decompressing the output file would look something like this: 
+4h4Mh4di"Y{O_o׿;Vhd4Ai
+@4Aڀh41h4mF@
+      C@hd2@
+            hF4XdBGaB~6VAGf͌>G
+                             `wBx)B׭
+<AVPIdJ-Se'y    _1Ft#^haX"l=]fwDZo,Axk|IFDs>R4"^d!P^g!)O^1IF    7kFx,2=l [ĵF7YxXHF;ň`n%,td;PFATu3SةY_l-e1
+                                    B
+
+4@weRI7}8v9H;uH%}$i
+
+basically unreadable, so we need to output it in hexdump format with [xxd [filename]] and its output: 
+00000000: 425a 6839 3141 5926 5359 7b4f 965f 0000  BZh91AY&SY{O._.. 
+=> 42 5a is .bz2 => we need to change prefix to .bz2 and decompressit again with command: [bzip2 -d [filename].bz2]
+
+-After decompressing it become a hexdump compress in .gz again so we need to repeat our process again. 
+- change prefix and gzip again. 
+- At this point, the data file should look something like in hexdump:
+
+ xxd compressed_data | head 
+00000000: 6461 7461 352e 6269 6e00 0000 0000 0000  data5.bin.......
+00000010: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+00000020: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+00000030: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+00000040: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+00000050: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+00000060: 0000 0000 3030 3030 3634 3400 3030 3030  ....0000644.0000
+00000070: 3030 3000 3030 3030 3030 3000 3030 3030  000.0000000.0000
+00000080: 3030 3234 3030 3000 3134 3432 3132 3731  0024000.14421271
+00000090: 3434 3700 3031 3132 3436 0020 3000 0000  447.011246. 0...
+
+-Noticed there's "data5.bin" => so it's a .tar => We need to change prefix to .tar and tar-zip it again with 
+[
+bandit12@bandit:/tmp/mydir$ mv compressed_data compressed_data.tar 
+bandit12@bandit:/tmp/mydir$ tar -xf compressed_data.tar 
+]
+- After tar zip the file, we got a file name data5.bin 
+- Now, ‘data5.bin’ seems to be another archive with a file called ‘data6.bin’. So we extract the file again. [tar -xf data5.bin] and we got a filename data6.bin which when run [file [data6.bin] is a compressed file with bz2]
+- BUt when run bz2 -d [filename] got 'bzip2: Can't guess original name for data6.bin -- using data6.bin.out' and got another file with .out [data6.bin.out] which turn out to be a tar 
+- Zip tar data6.bin.out got another gzip file : data8.bin. So we need to rename prefix and gzip again. 
+- Now we got the password : wbWdlBxEir4CaE8LaPhauuOo6pwRmrDw
+
+
+psd = wbWdlBxEir4CaE8LaPhauuOo6pwRmrDw
+
+
+---------------------------------------------------------------------------
+lv13 -> lv14: 
+A little bit of Theory
+Until now, we have only logged into the remote machine using ssh with a password. An alternative to a password is using public-key cryptography. The public key is placed on the computers that should allow access (the remote host) to the user that owns the private key. Like with the password, it is important that only the user knows/owns the private key. The -i flag allows login with the private key.
+
+[scp] is a command that uses SSH to transfer data over the network. The syntax to get a file from a remote host looks like the following: scp -P <port> <user>@<IP>:<remotefilepath> <localfilepath>. To send a file to a remote host, the local file path needs to stand at the beginning.
+
+An alternative to this method is starting a simple web server with python. This is useful when you do not have ssh access. On the machine where the file is you need to start the webserver with the following command: python3 -m http.server (best is to do it in the directory of the file). On the receiving machine you then just have to send an HTTP request: wget http://<ip>:8000/<pathtofile>
+
+Solution
+I logged into the server as bandit13 and found the file ‘sshkey.private’ in the home directory. Knowing the location of the file, I can transfer it to my machine.
+
+
+bandit13@bandit:~$ ls
+sshkey.private
+bandit13@bandit:~$ exit
+logout
+Connection to bandit.labs.overthewire.org closed.
+I used scp to connect to the remote machine and get the ssh key.
+
+┌──(kali㉿kali)-[~]
+└─$ scp -P 2220 bandit13@bandit.labs.overthewire.org:sshkey.private .         
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit13@bandit.labs.overthewire.org's password: 
+sshkey.private  
+Now that I had the private ssh key, I tried to log in with it. However, I got the following warning Permissions 0640 for 'sshkey.private' are too open., because it had the following writing permissions: -rw-r-----. So I reduced the permissions with [chmod 700 sshkey.private], so only the owner (me) has permissions for the file. The permissions will then look like this: -rwx------. And now it is possible to use the key to log into the new level:
+
+┌──(kali㉿kali)-[~]
+└─$ ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220
+
+
+---------------------------------------------------------------------------
+lv14 -> lv15: 
+
+[nc] or [netcat] is a command that allows to read and write data over a network connection. 
+It can be used for TCP and UDP connections. To connect to a service (as client) on a network the command syntax is the following: [nc <host> <port>]
+To create a server that listens to incoming packets, the command looks like this: [nc -l <port>]
+
+first get the password of this level as its stated in preious level, the password is in /etc/bandit_pass/bandit14. 
+cat /etc/bandit_pass/bandit14. => get the password of this level 
+
+- Submitting password to localhost port 30000 => nc localhost/127.0.0.1 30000  
+- Send the password of this level: => get the password for the next level
+
+psd = jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt
+
+
+---------------------------------------------------------------------------
+lv15 -> lv16
+
+- openssl s_client -connect localhost:30001 -ign_eof
+- Or echo "key" | openssl s_client -connect localhost:30001 -ign_eof
+
+psd = JQttfApK4SeyHwDlI9SXGR50qclOAil1
+
+
+---------------------------------------------------------------------------
+lv16 -> lv17
+
+- Scan all open port in range 31000-32000 [nmap localhost -p31000-32000 -sV]
+- Find oud which open is running what services : 
+PORT      STATE SERVICE     VERSION
+31046/tcp open  echo
+31518/tcp open  ssl/echo
+31691/tcp open  echo
+31790/tcp open  ssl/unknown
+31960/tcp open  echo
+
+- Send psd to SSL serice port running on
+[echo "JQttfApK4SeyHwDlI9SXGR50qclOAil1"|openssl s_client -connect localhost:31790 -ign_eof]
+
+Get ssh private key: 
+-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
+imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
+Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
+DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
+JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
+x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
+KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
+J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
+d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
+YNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8A
+vLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama
++TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT
+8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnx
+SatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHd
+HCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+Exdvt
+SghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0A
+R57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDi
+Ttiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCg
+R8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiu
+L8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Ni
+blh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkU
+YOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM
+77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0b
+dxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3
+vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
+-----END RSA PRIVATE KEY-----
+
+-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJimZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQJa6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTuDSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbWJGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNXx0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvDKHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBlJ9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovdd8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nCYNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8AvLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama+TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnxSatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHdHCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+ExdvtSghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0AR57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDiTtiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCgR8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiuL8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Niblh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkUYOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0bdxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
+-----END RSA PRIVATE KEY-----
+
+- Next we need to create a file contain this private key 
+
+Not finished yet 
+
+---------------------------------------------------------------------------
+lv17 -> lv18
+
+Skip for now 
+psd = hga5tuuCLF6fFzUpnagiMN8ssu9LFrdg
+
+
+---------------------------------------------------------------------------
+lv18 -> lv19
+
+bandit18@bandit.labs.overthewire.org -p 2220 'cat readme'
+
+- Simply run 2 commands; first login with ssh then ran [cat [filename]] to display filename content 
+
+psd = awhqfNnAbc1naukrpqDYcF95h7HoMTrC
+
+
+---------------------------------------------------------------------------
+lv19 -> lv20
+
+- First run : [bandit19@bandit:~$ ./bandit20-do 
+                Run a command as another user.] => Let user have more priviledges 
+- ./bandit20-do cat /etc/bandit_pass/bandit20 => get password and done  
+
+psd = VxCazJaVykI6W36BkBU0mJTCM8rR95XT 
+
+
+---------------------------------------------------------------------------
+lv20 -> lv21
+
+- First create a server listen on a port, let say 1234, using pipe to get the output of the first cmd to 2nd command: 
+[echo -n 'VxCazJaVykI6W36BkBU0mJTCM8rR95XT' | nc -l -p 1234]
+
+- Second create a client connect to port 1234 with [./suconnect 1234] and the client will send back the password to the next lv to the server
+
+psd = NvEJF7oVjkddltPSrdKEFOllh9V1IBcq
+
+
+---------------------------------------------------------------------------
+lv21 -> lv22
+
+bash /usr/bin/cronjob_bandit22.sh 
+chmod: changing permissions of '/tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv': Operation not permitted
+/usr/bin/cronjob_bandit22.sh: line 3: /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv: Permission denied
+
+to see what the file does => changing priviledge on /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv file 
+
+bandit21@bandit:~$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+WdDozAdTM2z9DiFEQ2mGlwngMfj4EZff => password 
+
+
+psd = WdDozAdTM2z9DiFEQ2mGlwngMfj4EZff
+
+
+---------------------------------------------------------------------------
+lv22 -> lv23 
+
+https://david-varghese.medium.com/overthewire-bandit-level-22-level-23-fa73aa96c230
+
+psd = QYw0Y2aiA672PsMmh9puTQuhoz8SyR2G
+
+
+---------------------------------------------------------------------------
+lv23 -> lv24 
+
+-First [ls /etc/cron.d] to see what is in there => get 
+cronjob_bandit15_root  cronjob_bandit23       e2scrub_all
+cronjob_bandit17_root  cronjob_bandit24       otw-tmp-dir
+cronjob_bandit22       cronjob_bandit25_root  sysstat
+
+-Check content of cronjob_bandit24 to see which script is being executed by cron=> get 
+[cat /etc/cron.d/cronjob_bandit24]
+@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+
+-Check content of cronjob_bandit24.sh => [cat /usr/bin/cronjob_bandit24.sh] => the script execute every script in /var/spool/$myname/foo:
+
+-Create a temp folder to store our script and password => mktemp -d => cd to that folder and create a .sh file 
+
+#!/bin/bash 
+
+cat /etc/bandit_pass/bandit24 > /tmp/[Your temp folder]/password.txt
+
+
+- Save the script and give its permission with [chmod 777]
+
+- copy file content to /var/spool/bandit24/foo then the password will automatically be created in password.txt in temp folder 
+
+psd = VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar
+
+
+---------------------------------------------------------------------------
+lv24 -> lv25 
+
+- First create a temp folder for temp file with [mktemp -d] 
+
+- Create a script to send password along with PIN code to listening port on localhost 
+
+#!/bin/bash 
+
+for i in {0000..9999}
+do 
+    echo "VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar $i"
+done 
+
+
+- Give it execute permission [chmod u+x script.sh]
+
+- Run ./script | nc localhost 30002 | grep -v "Wrong" 
+=> Enumarate all PIN code, send each one to localhost on port 30002 and find the one without keyword "Wrong" to display 
+
+psd = p7TaowMYrmu23Ol8hiZh9UvD0O9hpx8d 
+
+
+---------------------------------------------------------------------------
+lv25 -> lv26
+
+- [ls] find the private ssh key in home directory : bandit26.sshkey
+
+- Login to bandit 26 with given sshkey. [ssh -i bandit26.sshkey bandit26@localhost -p 2220]
+
+- DO NOT OPEN AT FULL WINDOW TERMINAL, KEEP IT AS SMALL AS POSSIBLE 
+
+- Go into vim mode by pressing V. 
+
+- Activate shell with [:set shell=bin/bash]
+- Use bandit26 shell [:shell]. At this point, we have user bandit26 permission,
+we just need to cat the password [cat /etc/bandit_pass/bandit26]
+
+psd = c7GvcKlw9mC7aUQaPx7nwFstuAIBw1o1
+
+
+---------------------------------------------------------------------------
+lv26 -> lv27
+
+- Run [ls] and find out there's a bandit27-do file in home directory => give we permission of bandit27 user 
+
+- [Cat /etc/bandit_pass/bandit27] and get the password.
+
+psd = YnQpBuifNMas1hcUFk70ZmqkhUU2EuaS
+
+
+---------------------------------------------------------------------------
+lv27 -> lv28
+
+- CLone repo : [git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo]
+- It will prompt a password which is the same as the current level
+- After clone the repo, move around folder and found a README file which contain password for next level\
+
+psd = AVanL161y9rsbcJIsFHuw35rjaOM19nR
+
+
+---------------------------------------------------------------------------
+lv28 -> lv29
+
+- [git clone ssh://bandit28-git@localhost:2220/home/bandit28-git/repo] => Clone repo 
+
+- [git log] to see changes history 
+
+- [git diff [id1] [id2]] to see what have been changes between 2 commit id 
+
+psd = tQKvmcwNYcFS6vmPHIUSI3ShmsrQZK8S
+
+
+---------------------------------------------------------------------------
+lv29 -> lv30
+
+[git clone ssh://bandit29-git@localhost:2220/home/bandit29-git/repo] => Clone repo
+
+- [git branch -a] to see all branch on the repo 
+git branch -a
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/dev
+  remotes/origin/master
+  remotes/origin/sploits-dev
+
+- [git checkout dev] to switch from master to dev branch 
+
+- [cat README] to see next level password
+ 
+psd = xbhV3HpNGlTIdnjUrdAlPzc2L6y9EOnS 
+
+
+---------------------------------------------------------------------------
+lv30 -> lv31
+
+- Same step like lv30 
+-[git tag], [git show secret]
+
+psd = OoffzGDlzhAlerFJ2cAiz1D41JW1Mhmt
+
+
+---------------------------------------------------------------------------
+lv31 -> lv32
+
+
+[git clone ssh://bandit31-git@localhost:2220/home/bandit31-git/repo] => To clone this repo
+
+- Create a .txt file after reviewing README [echo 'content' > key.txt]
+- We need to push the file to remote repo so we need to remove .txt from .ignore file 
+- git add -f key.txt && git commit && git push -u origin master
+
+- After push the file, a login prompt for login appear, login and the password is sent.
+
+psd = rmCBvG56y58BXzv98yZGdO7ATVL5dW8y
+
+
+---------------------------------------------------------------------------
+lv32 -> lv33
+
+https://mayadevbe.me/posts/overthewire/bandit/level33/
+
+psd = odHo63fHiFqcWWJG9rLiLDtPm45KzUKy
